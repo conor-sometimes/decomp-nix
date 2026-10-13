@@ -10,7 +10,14 @@
 { mkDecompEnv, tools, pkgs }:
 
 let
-  ps2Tools = [ tools.binutils-mips-ps2 tools.ccc tools.ghidra.ps2 ];
+  # decomp-permuter scores by disassembling the target with `mips-linux-gnu-objdump -drz -m mips:4300`.
+  # Provide that name, backed by the R5900 PS2 binutils (translate the generic mips:4300 -> mips:5900).
+  permuterObjdump = pkgs.writeShellScriptBin "mips-linux-gnu-objdump" ''
+    args=()
+    for a in "$@"; do [ "$a" = mips:4300 ] && a=mips:5900; args+=("$a"); done
+    exec ${tools.binutils-mips-ps2}/bin/mips-ps2-decompals-objdump "''${args[@]}"
+  '';
+  ps2Tools = [ tools.binutils-mips-ps2 tools.ccc tools.ghidra.ps2 permuterObjdump ];
   compilers = pkgs.symlinkJoin {
     name = "ps2-compilers";
     paths = builtins.attrValues tools.ee-gcc;
