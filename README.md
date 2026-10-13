@@ -17,6 +17,7 @@ declared once and cached, instead of per-machine setup scripts, containers or di
 | `objdiff` | `objdiff-cli` | per-function object diffs and progress reports; in every env |
 | `binutils-mips-ps2` | `mips-ps2-decompals-*` | R5900-aware binutils (as, ld, objcopy, objdump, ...); in PS2 envs |
 | (nixpkgs) | `spatch` | Coccinelle, type-aware renames across C; in every env |
+| `rename-field` | `rename-field STRUCT OLD NEW [PATH...]` | IDA-style field rename: only where the type really is that struct (Coccinelle); prints what it couldn't reach (macro args, unparseable code) |
 
 `ghidra-<platform> analyze BINARY OUTDIR` runs headless: import, auto-analysis, then
 `OUTDIR/functions.json` (every function), `OUTDIR/symbol_addrs.txt` (named ones, splat format)

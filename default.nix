@@ -7,12 +7,13 @@ let
   tools = {
     objdiff = import ./pkgs/objdiff { inherit pkgs; };
     binutils-mips-ps2 = import ./pkgs/binutils-mips-ps2 { inherit pkgs; };
+    rename-field = import ./pkgs/rename-field { inherit pkgs; };
   };
   lib = import ./lib { inherit pkgs tools; };
 in
 {
   inherit lib;
-  inherit (tools) objdiff binutils-mips-ps2;
+  inherit (tools) objdiff binutils-mips-ps2 rename-field;
   ghidra = import ./pkgs/ghidra { inherit pkgs; };   # ghidra.ps2, ghidra.ps1
   lombyte = import ./projects/lombyte { inherit pkgs lib tools; };
   bokura-no-kazoku = import ./projects/bokura-no-kazoku { inherit pkgs lib tools; };
