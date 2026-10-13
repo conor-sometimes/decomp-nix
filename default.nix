@@ -3,6 +3,10 @@
 #   (import (fetchTarball ".../archive/<rev>.tar.gz") { inherit pkgs; }).lombyte.env
 { pkgs ? import <nixpkgs> { } }:
 
+let
+  lib = import ./lib { inherit pkgs; };
+in
 {
-  lombyte = import ./projects/lombyte { inherit pkgs; };
+  inherit lib;
+  lombyte = import ./projects/lombyte { inherit pkgs lib; };
 }

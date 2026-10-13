@@ -28,5 +28,20 @@ On NixOS, add the package to `environment.systemPackages`:
 ## Layout
 
     default.nix         entry point (non-flake)
+    lib/mkDecompEnv.nix the common environment base every project builds on
     pkgs/               shared decomp tools (permuter, m2c, ...)
     projects/<name>/    one project's environment and toolchain
+
+## Adding a project
+
+    # projects/<name>/default.nix
+    { pkgs, lib }:
+    {
+      env = lib.mkDecompEnv {
+        name = "<name>";             # -> a <name>-env command
+        wine = false;                # true if a compiler or assembler is a Windows .exe
+        packages = p: [ ];           # anything else the build needs
+      };
+    }
+
+then one line in default.nix: `<name> = import ./projects/<name> { inherit pkgs lib; };`
