@@ -6,7 +6,7 @@ declared once and cached, instead of per-machine setup scripts, containers or di
 | Project | Platform | Nix file | What's here |
 | --- | --- | --- | --- |
 | [Lombyte](https://github.com/lombyte-project/Lombyte) (Ratchet & Clank) | PS2 | [projects/lombyte/default.nix](projects/lombyte/default.nix) | `lombyte.env`: build environment (Wine for the SN tools) |
-| Bokura no Kazoku (private decomp) | PS2 | [projects/bokura-no-kazoku/default.nix](projects/bokura-no-kazoku/default.nix) | `bokura-no-kazoku.env`: build environment (no Wine) |
+| Bokura no Kazoku (private decomp) | PS2 | [projects/bokura-no-kazoku/default.nix](projects/bokura-no-kazoku/default.nix) | `bokura-no-kazoku.env`: PS2 env; its compiler, EE-GCC 2.96 (-O2 -G0), is `$DECOMP_COMPILERS/ee-gcc2.96` |
 | Crash Bash (private decomp) | PS1 | [projects/crash-bash/default.nix](projects/crash-bash/default.nix) | `crash-bash.env`: PS1 env (Psy-Q GCC 2.8.1, maspsx, mipsel binutils, just, uv) |
 
 ## Tools
@@ -22,6 +22,7 @@ declared once and cached, instead of per-machine setup scripts, containers or di
 | `ccc` | `stdump`, `uncc`, `demangle` | PS2 symbol tables: STABS/ELF/SNDLL types and signatures, skeleton sources, GCC 2.x demangling; in PS2 envs |
 | `decomp-guard` | `decomp-guard install` / `check` | pre-commit hook that refuses game data (extensions, boot-executable names, ELF/PS-X EXE/ISO/ROM bytes, generated paths, big binaries); plain bash, also runs without Nix; in every env |
 | `old-gcc.*` | (folders) | old console GCCs from decompals/old-gcc, e.g. `old-gcc.gcc-2_8_1-psx` |
+| `ee-gcc.*` | (folders) | Sony EE-GCC builds from decomp.me's mirror (2.96, 2.9-991111/-01/a, 2.9-990721, 3.2-040921), under `$DECOMP_COMPILERS` in PS2 envs |
 | `maspsx` | `maspsx` | Psy-Q assembler behaviour for GNU as (PS1) |
 | `asm-differ` | `asm-differ` | quick per-function terminal diffs (diff.py) |
 | `binutils-mipsel` | `mipsel-linux-gnu-*` | little-endian MIPS binutils (PS1) |
@@ -36,7 +37,7 @@ binutils, maspsx, asm-differ, ghidra-ps1, just and uv, plus the old PS1 compiler
 `$DECOMP_COMPILERS` (gcc-2.8.1-psx, ...; link a project's `tools/<name>` there).
 
 PS2 projects use [lib/platforms/ps2.nix](lib/platforms/ps2.nix) (`lib.platforms.ps2.mkEnv`): the
-shared base plus the same PS2 toolbox everywhere (binutils-mips-ps2, ccc, ghidra-ps2).
+shared base plus the same PS2 toolbox everywhere (binutils-mips-ps2, ccc, ghidra-ps2, and the EE-GCC builds under `$DECOMP_COMPILERS`).
 
 Every project builds on [lib/mkDecompEnv.nix](lib/mkDecompEnv.nix) (the shared base: gcc
 multilib, the tools to build old compilers, ninja, Python with decomp-permuter's packages).
