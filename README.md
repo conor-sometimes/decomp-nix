@@ -8,6 +8,18 @@ declared once and cached, instead of per-machine setup scripts, containers or di
 | [Lombyte](https://github.com/lombyte-project/Lombyte) (Ratchet & Clank) | PS2 | [projects/lombyte/default.nix](projects/lombyte/default.nix) | `lombyte.env`: build environment (Wine for the SN tools) |
 | Bokura no Kazoku (private decomp) | PS2 | [projects/bokura-no-kazoku/default.nix](projects/bokura-no-kazoku/default.nix) | `bokura-no-kazoku.env`: build environment (no Wine) |
 
+## Tools
+
+| Package | Command | What it is |
+| --- | --- | --- |
+| `ghidra.ps2` | `ghidra-ps2` | Ghidra 12.0.4 + [ghidra-emotionengine-reloaded](https://github.com/chaoticgd/ghidra-emotionengine-reloaded) (EE processor, STABS) |
+| `ghidra.ps1` | `ghidra-ps1` | Ghidra 12.0.4 + [ghidra_psx_ldr](https://github.com/lab313ru/ghidra_psx_ldr) (PS-X EXE, GTE, Psy-Q signatures and types) |
+
+`ghidra-<platform> analyze BINARY OUTDIR` runs headless: import, auto-analysis, then
+`OUTDIR/functions.json` (every function), `OUTDIR/symbol_addrs.txt` (named ones, splat format)
+and the Ghidra project. Defined in [pkgs/ghidra/default.nix](pkgs/ghidra/default.nix); more
+platforms (N64, GameCube/Wii, NDS, GBA) once their extensions build for nixpkgs' Ghidra.
+
 Every project builds on [lib/mkDecompEnv.nix](lib/mkDecompEnv.nix) (the shared base: gcc
 multilib, the tools to build old compilers, ninja, Python with decomp-permuter's packages).
 
@@ -33,7 +45,7 @@ On NixOS, add the package to `environment.systemPackages`:
 
     default.nix         entry point (non-flake): [default.nix](default.nix)
     lib/mkDecompEnv.nix the common environment base every project builds on: [lib/](lib/)
-    pkgs/               shared decomp tools (permuter, m2c, ...)
+    pkgs/               shared decomp tools (ghidra-<platform>, ...)
     projects/<name>/    one project's environment and toolchain
 
 ## Adding a project

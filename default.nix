@@ -8,6 +8,7 @@ let
 in
 {
   inherit lib;
+  ghidra = import ./pkgs/ghidra { inherit pkgs; };   # ghidra.ps2, ghidra.ps1
   lombyte = import ./projects/lombyte { inherit pkgs lib; };
   bokura-no-kazoku = import ./projects/bokura-no-kazoku { inherit pkgs lib; };
 }
