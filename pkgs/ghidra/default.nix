@@ -21,7 +21,7 @@ let
   # an obscure "Missing SLA format header" at run time.
   prebuilt = { name, url, sha256, writable ? false, forGhidra }:
     assert pkgs.lib.assertMsg (ghidra.version == forGhidra)
-      "decomp-nix: ${name} is pinned for Ghidra ${forGhidra}, but this nixpkgs has Ghidra ${ghidra.version}; update its url/sha256 (and forGhidra) in pkgs/ghidra/default.nix, or the nixpkgs pin";
+      "decomp-nix: ${name} is pinned for Ghidra ${forGhidra}, but this nixpkgs has Ghidra ${ghidra.version}; update its url/sha256 (and forGhidra) in pkgs/ghidra/default.nix, or the nixpkgs pin in flake.lock";
     pkgs.stdenvNoCC.mkDerivation {
       pname = name;
       version = ghidra.version;

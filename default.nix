@@ -2,14 +2,14 @@
 #   nix-build -A lombyte.env          # or: nix-shell -A lombyte.env.env
 #   (import (fetchTarball ".../archive/<rev>.tar.gz") { }).lombyte.env
 #
-# Builds use the nixpkgs pinned in nixpkgs.json, not the caller's channel: tool versions (Ghidra
-# and its extensions above all) must match exactly, and a channel update shouldn't change them.
-# Passing your own `pkgs` overrides the pin, at your own risk.
+# Builds use the nixpkgs pinned in flake.lock (the one pin, shared with flake.nix), not the
+# caller's channel: tool versions (Ghidra and its extensions above all) must match exactly.
+# Bump with `nix flake update`. Passing your own `pkgs` overrides the pin, at your own risk.
 let
-  pin = builtins.fromJSON (builtins.readFile ./nixpkgs.json);
+  locked = (builtins.fromJSON (builtins.readFile ./flake.lock)).nodes.nixpkgs.locked;
   pinned = import (fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/${pin.rev}.tar.gz";
-    inherit (pin) sha256;
+    url = "https://github.com/NixOS/nixpkgs/archive/${locked.rev}.tar.gz";
+    sha256 = locked.narHash;
   }) { };
 in
 { pkgs ? pinned }:

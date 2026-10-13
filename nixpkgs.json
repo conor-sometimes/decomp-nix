@@ -1,5 +1,0 @@
-{
-  "comment": "The nixpkgs every decomp-nix build uses (nixos-26.05, the commit hokkaido runs). Bump: change rev, then sha256 = nix-prefetch-url --unpack https://github.com/NixOS/nixpkgs/archive/<rev>.tar.gz; then run the tests and check every Ghidra extension still matches (see pkgs/ghidra).",
-  "rev": "7993f34ee47e28a3d607a525aadc6c94b73be728",
-  "sha256": "1gdy838s9vsjsd1lqq746a597fqrgvqqpmnzs07fl0vksskbfsk4"
-}

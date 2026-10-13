@@ -3,11 +3,11 @@
 #   nix develop github:conor-sometimes/decomp-nix#bokura-no-kazoku     # interactive shell in a project's env
 #   nix run github:conor-sometimes/decomp-nix#bokura-no-kazoku -- -c 'make'   # one command in it
 # (an FHS env's devShell is interactive only and ignores --command; use nix run for commands)
-# nixpkgs here and in nixpkgs.json must name the same commit (flake.lock adds the content hash).
+# flake.lock is the only nixpkgs pin; default.nix reads it too. Bump: nix flake update.
 {
   description = "Nix packages for matching decompilations: build environments, toolchains, Ghidra per console";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/7993f34ee47e28a3d607a525aadc6c94b73be728";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
   outputs = { self, nixpkgs }:
     let
@@ -15,18 +15,20 @@
       pkgs = nixpkgs.legacyPackages.${system};
       inherit (pkgs) lib;
       d = import ./default.nix { inherit pkgs; };
-      projects = { inherit (d) lombyte bokura-no-kazoku crash-bash; };
+      # Everything is defined once, in default.nix; the flake only re-exposes it.
+      projects = lib.filterAttrs (_: v: v ? env) d;                 # attrs with an env = projects
       envs = lib.mapAttrs (_: p: p.env) projects;
-      compilers = lib.concatMapAttrs (_: set: set) { inherit (d) old-gcc ee-gcc; };
+      # package sets (ghidra.ps2, ee-gcc.ee-gcc2_96, ...) flattened to ghidra-ps2, ee-gcc2_96, ...
+      nested = lib.concatMapAttrs (n: set:
+        lib.mapAttrs' (k: v: lib.nameValuePair (if lib.hasPrefix n k then k else "${n}-${k}") v)
+          (lib.filterAttrs (_: lib.isDerivation) set))
+        (lib.filterAttrs (n: v: builtins.isAttrs v && !(lib.isDerivation v) && !(v ? env) && n != "lib") d);
+      tools = lib.filterAttrs (_: lib.isDerivation) d;
     in
     {
       lib = d.lib;
 
-      packages.${system} = envs // compilers // {
-        inherit (d) objdiff binutils-mips-ps2 binutils-mipsel rename-field ccc decomp-guard maspsx asm-differ;
-        ghidra-ps2 = d.ghidra.ps2;
-        ghidra-ps1 = d.ghidra.ps1;
-      };
+      packages.${system} = tools // nested // envs;
 
       # `nix develop .#<project>`: interactive shell in that project's FHS environment
       devShells.${system} = lib.mapAttrs (_: e: e.env) envs;

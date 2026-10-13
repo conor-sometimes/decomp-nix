@@ -48,7 +48,7 @@ multilib, the tools to build old compilers, ninja, Python with decomp-permuter's
     nix develop github:conor-sometimes/decomp-nix#crash-bash                  # an interactive shell in it
     nix build github:conor-sometimes/decomp-nix#ghidra-ps2                    # any tool
 
-`flake.lock` pins nixpkgs; [flake.nix](flake.nix) is a thin wrapper over default.nix.
+`flake.lock` is the one nixpkgs pin (default.nix reads it too; bump with `nix flake update`). [flake.nix](flake.nix) re-exposes default.nix and lists nothing by hand: add a package or project to default.nix and it appears in the flake.
 
 ## Use (without flakes)
 
