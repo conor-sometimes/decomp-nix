@@ -19,17 +19,19 @@
 
 pkgs.buildFHSEnv {
   name = "${name}-env";
+  multiArch = true;   # include the 32-bit (i686) side: without it multiPkgs and /lib/ld-linux.so.2 are missing
   targetPkgs = p: with p; [
     bashInteractive coreutils findutils gnugrep gnused gawk diffutils patch which file
     curl git gnumake gnutar gzip xz unzip
     gcc_multi binutils   # gcc -m32: 32-bit tools and old compilers built from source
     flex bison m4 perl texinfo
     ninja
+    zstd                 # libzstd.so.1 for the decompals binutils
     (python3.withPackages (ps: with ps; [ pycparser toml levenshtein ] ++ pythonPackages ps))  # decomp-permuter
   ] ++ pkgs.lib.optional wine p.wineWow64Packages.stable
     ++ packages p;
   # 32-bit runtime for prebuilt i386 compilers (glibc comes with the FHS base)
-  multiPkgs = p: with p; [ stdenv.cc.cc.lib zlib ] ++ multiPackages p;
+  multiPkgs = p: with p; [ stdenv.cc.cc.lib zlib zstd ] ++ multiPackages p;
   profile = pkgs.lib.optionalString wine ''
     export WINEDEBUG=-all
   '' + profile;
