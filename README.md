@@ -14,6 +14,9 @@ declared once and cached, instead of per-machine setup scripts, containers or di
 | --- | --- | --- |
 | `ghidra.ps2` | `ghidra-ps2` | Ghidra 12.0.4 + [ghidra-emotionengine-reloaded](https://github.com/chaoticgd/ghidra-emotionengine-reloaded) (EE processor, STABS) |
 | `ghidra.ps1` | `ghidra-ps1` | Ghidra 12.0.4 + [ghidra_psx_ldr](https://github.com/lab313ru/ghidra_psx_ldr) (PS-X EXE, GTE, Psy-Q signatures and types) |
+| `objdiff` | `objdiff-cli` | per-function object diffs and progress reports; in every env |
+| `binutils-mips-ps2` | `mips-ps2-decompals-*` | R5900-aware binutils (as, ld, objcopy, objdump, ...); in PS2 envs |
+| (nixpkgs) | `spatch` | Coccinelle, type-aware renames across C; in every env |
 
 `ghidra-<platform> analyze BINARY OUTDIR` runs headless: import, auto-analysis, then
 `OUTDIR/functions.json` (every function), `OUTDIR/symbol_addrs.txt` (named ones, splat format)

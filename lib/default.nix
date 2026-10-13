@@ -1,5 +1,5 @@
-{ pkgs }:
+{ pkgs, tools }:
 
 {
-  mkDecompEnv = import ./mkDecompEnv.nix { inherit pkgs; };
+  mkDecompEnv = import ./mkDecompEnv.nix { inherit pkgs tools; };
 }

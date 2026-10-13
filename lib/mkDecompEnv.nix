@@ -6,7 +6,7 @@
 # The base covers what decomp toolchains usually need: gcc with 32-bit support, the tools to build
 # old compilers from source, ninja, and Python with decomp-permuter's packages. A project adds
 # only what's special about it.
-{ pkgs }:
+{ pkgs, tools }:
 
 {
   name,
@@ -27,6 +27,8 @@ pkgs.buildFHSEnv {
     flex bison m4 perl texinfo
     ninja
     zstd                 # libzstd.so.1 for the decompals binutils
+    tools.objdiff        # objdiff-cli: per-function diffs and the progress report, in every env
+    coccinelle           # spatch: type-aware renames across C (a field of one struct, not every same-named field)
     (python3.withPackages (ps: with ps; [ pycparser toml levenshtein ] ++ pythonPackages ps))  # decomp-permuter
   ] ++ pkgs.lib.optional wine p.wineWow64Packages.stable
     ++ packages p;

@@ -4,11 +4,16 @@
 { pkgs ? import <nixpkgs> { } }:
 
 let
-  lib = import ./lib { inherit pkgs; };
+  tools = {
+    objdiff = import ./pkgs/objdiff { inherit pkgs; };
+    binutils-mips-ps2 = import ./pkgs/binutils-mips-ps2 { inherit pkgs; };
+  };
+  lib = import ./lib { inherit pkgs tools; };
 in
 {
   inherit lib;
+  inherit (tools) objdiff binutils-mips-ps2;
   ghidra = import ./pkgs/ghidra { inherit pkgs; };   # ghidra.ps2, ghidra.ps1
-  lombyte = import ./projects/lombyte { inherit pkgs lib; };
-  bokura-no-kazoku = import ./projects/bokura-no-kazoku { inherit pkgs lib; };
+  lombyte = import ./projects/lombyte { inherit pkgs lib tools; };
+  bokura-no-kazoku = import ./projects/bokura-no-kazoku { inherit pkgs lib tools; };
 }

@@ -3,7 +3,7 @@
 #
 #   lombyte-env                     # a shell
 #   lombyte-env -c 'make elf'       # one command, from inside a Lombyte clone
-{ pkgs, lib }:
+{ pkgs, lib, tools }:
 
 {
   env = lib.mkDecompEnv {

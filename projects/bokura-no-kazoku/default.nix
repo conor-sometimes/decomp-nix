@@ -4,10 +4,11 @@
 #
 #   bokura-env                      # a shell
 #   bokura-env -c 'make'            # one command, from inside the decomp repo
-{ pkgs, lib }:
+{ pkgs, lib, tools }:
 
 {
   env = lib.mkDecompEnv {
     name = "bokura";
+    packages = p: [ tools.binutils-mips-ps2 ];   # mips-ps2-decompals-{as,ld,objcopy,objdump,...}
   };
 }
