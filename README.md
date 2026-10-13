@@ -88,3 +88,7 @@ On NixOS, add the package to `environment.systemPackages`:
     }
 
 then one line in default.nix: `<name> = import ./projects/<name> { inherit pkgs lib; };`
+
+## Licence
+
+Licensed under the GNU General Public License v3.0 or later (see [LICENSE](LICENSE)). The packages only fetch upstream tools and compilers from their own release pages; each keeps its own licence.
