@@ -6,7 +6,7 @@
 { pkgs, lib, tools }:
 
 {
-  env = lib.mkDecompEnv {
+  env = lib.platforms.ps2.mkEnv {
     name = "lombyte";
     wine = true;
   };

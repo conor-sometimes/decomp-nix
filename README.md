@@ -18,11 +18,15 @@ declared once and cached, instead of per-machine setup scripts, containers or di
 | `binutils-mips-ps2` | `mips-ps2-decompals-*` | R5900-aware binutils (as, ld, objcopy, objdump, ...); in PS2 envs |
 | (nixpkgs) | `spatch` | Coccinelle, type-aware renames across C; in every env |
 | `rename-field` | `rename-field STRUCT OLD NEW [PATH...]` | IDA-style field rename: only where the type really is that struct (Coccinelle); prints what it couldn't reach (macro args, unparseable code) |
+| `ccc` | `stdump`, `uncc`, `demangle` | PS2 symbol tables: STABS/ELF/SNDLL types and signatures, skeleton sources, GCC 2.x demangling; in PS2 envs |
 
 `ghidra-<platform> analyze BINARY OUTDIR` runs headless: import, auto-analysis, then
 `OUTDIR/functions.json` (every function), `OUTDIR/symbol_addrs.txt` (named ones, splat format)
 and the Ghidra project. Defined in [pkgs/ghidra/default.nix](pkgs/ghidra/default.nix); more
 platforms (N64, GameCube/Wii, NDS, GBA) once their extensions build for nixpkgs' Ghidra.
+
+PS2 projects use [lib/platforms/ps2.nix](lib/platforms/ps2.nix) (`lib.platforms.ps2.mkEnv`): the
+shared base plus the same PS2 toolbox everywhere (binutils-mips-ps2, ccc, ghidra-ps2).
 
 Every project builds on [lib/mkDecompEnv.nix](lib/mkDecompEnv.nix) (the shared base: gcc
 multilib, the tools to build old compilers, ninja, Python with decomp-permuter's packages).

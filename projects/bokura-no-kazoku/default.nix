@@ -7,8 +7,7 @@
 { pkgs, lib, tools }:
 
 {
-  env = lib.mkDecompEnv {
+  env = lib.platforms.ps2.mkEnv {
     name = "bokura";
-    packages = p: [ tools.binutils-mips-ps2 ];   # mips-ps2-decompals-{as,ld,objcopy,objdump,...}
   };
 }
