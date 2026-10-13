@@ -3,10 +3,13 @@
 Nix packages for matching decompilation projects: build environments and toolchains,
 declared once and cached, instead of per-machine setup scripts, containers or distroboxes.
 
-| Project | Platform | What's here |
-| --- | --- | --- |
-| [Lombyte](https://github.com/lombyte-project/Lombyte) (Ratchet & Clank) | PS2 | `lombyte.env`: build environment (FHS env, Wine, gcc multilib, Python) |
-| Bokura no Kazoku (private decomp) | PS2 | `bokura-no-kazoku.env`: build environment (no Wine) |
+| Project | Platform | Nix file | What's here |
+| --- | --- | --- | --- |
+| [Lombyte](https://github.com/lombyte-project/Lombyte) (Ratchet & Clank) | PS2 | [projects/lombyte/default.nix](projects/lombyte/default.nix) | `lombyte.env`: build environment (Wine for the SN tools) |
+| Bokura no Kazoku (private decomp) | PS2 | [projects/bokura-no-kazoku/default.nix](projects/bokura-no-kazoku/default.nix) | `bokura-no-kazoku.env`: build environment (no Wine) |
+
+Every project builds on [lib/mkDecompEnv.nix](lib/mkDecompEnv.nix) (the shared base: gcc
+multilib, the tools to build old compilers, ninja, Python with decomp-permuter's packages).
 
 ## Use
 
@@ -28,8 +31,8 @@ On NixOS, add the package to `environment.systemPackages`:
 
 ## Layout
 
-    default.nix         entry point (non-flake)
-    lib/mkDecompEnv.nix the common environment base every project builds on
+    default.nix         entry point (non-flake): [default.nix](default.nix)
+    lib/mkDecompEnv.nix the common environment base every project builds on: [lib/](lib/)
     pkgs/               shared decomp tools (permuter, m2c, ...)
     projects/<name>/    one project's environment and toolchain
 
