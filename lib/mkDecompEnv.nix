@@ -34,6 +34,7 @@ pkgs.buildFHSEnv {
     tools.objdiff        # objdiff-cli: per-function diffs and the progress report, in every env
     coccinelle           # spatch: type-aware renames across C (a field of one struct, not every same-named field)
     tools.rename-field   # rename-field STRUCT OLD NEW: Coccinelle-based struct field rename
+    tools.decomp-guard   # decomp-guard install: pre-commit hook that refuses game data
     (python3.withPackages (ps: with ps; [ pycparser toml levenshtein ] ++ pythonPackages ps))  # decomp-permuter
   ] ++ pkgs.lib.optional wine p.wineWow64Packages.stable
     ++ packages p;

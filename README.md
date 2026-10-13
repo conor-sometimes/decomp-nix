@@ -19,6 +19,7 @@ declared once and cached, instead of per-machine setup scripts, containers or di
 | (nixpkgs) | `spatch` | Coccinelle, type-aware renames across C; in every env |
 | `rename-field` | `rename-field STRUCT OLD NEW [PATH...]` | IDA-style field rename: only where the type really is that struct (Coccinelle); prints what it couldn't reach (macro args, unparseable code) |
 | `ccc` | `stdump`, `uncc`, `demangle` | PS2 symbol tables: STABS/ELF/SNDLL types and signatures, skeleton sources, GCC 2.x demangling; in PS2 envs |
+| `decomp-guard` | `decomp-guard install` / `check` | pre-commit hook that refuses game data (extensions, boot-executable names, ELF/PS-X EXE/ISO/ROM bytes, generated paths, big binaries); plain bash, also runs without Nix; in every env |
 
 `ghidra-<platform> analyze BINARY OUTDIR` runs headless: import, auto-analysis, then
 `OUTDIR/functions.json` (every function), `OUTDIR/symbol_addrs.txt` (named ones, splat format)
