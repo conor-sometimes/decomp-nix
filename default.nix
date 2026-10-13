@@ -9,4 +9,5 @@ in
 {
   inherit lib;
   lombyte = import ./projects/lombyte { inherit pkgs lib; };
+  bokura-no-kazoku = import ./projects/bokura-no-kazoku { inherit pkgs lib; };
 }

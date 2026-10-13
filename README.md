@@ -6,6 +6,7 @@ declared once and cached, instead of per-machine setup scripts, containers or di
 | Project | Platform | What's here |
 | --- | --- | --- |
 | [Lombyte](https://github.com/lombyte-project/Lombyte) (Ratchet & Clank) | PS2 | `lombyte.env`: build environment (FHS env, Wine, gcc multilib, Python) |
+| Bokura no Kazoku (private decomp) | PS2 | `bokura-no-kazoku.env`: build environment (no Wine) |
 
 ## Use
 
