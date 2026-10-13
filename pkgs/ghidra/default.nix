@@ -17,7 +17,11 @@ let
   # writable: the extension writes next to its own data at run time (lock files for its .gdt
   # type archives), so it can't load from the read-only store; the wrapper installs a copy
   # into Ghidra's per-user extensions folder instead.
-  prebuilt = { name, url, sha256, writable ? false }:
+  # Each extension zip is built for one exact Ghidra release; a mismatch otherwise shows up only as
+  # an obscure "Missing SLA format header" at run time.
+  prebuilt = { name, url, sha256, writable ? false, forGhidra }:
+    assert pkgs.lib.assertMsg (ghidra.version == forGhidra)
+      "decomp-nix: ${name} is pinned for Ghidra ${forGhidra}, but this nixpkgs has Ghidra ${ghidra.version}; update its url/sha256 (and forGhidra) in pkgs/ghidra/default.nix, or the nixpkgs pin";
     pkgs.stdenvNoCC.mkDerivation {
       pname = name;
       version = ghidra.version;
@@ -44,12 +48,14 @@ let
       name = "ghidra-emotionengine-reloaded";
       url = "https://github.com/chaoticgd/ghidra-emotionengine-reloaded/releases/download/v2.1.38/ghidra_12.0.4_PUBLIC_20261004_ghidra-emotionengine-reloaded.zip";
       sha256 = "16as8z9c9snyrp2kkir5rmvk9r2w1pwii35jzafhnjsggppmkw8j";
+      forGhidra = "12.0.4";
     };
     # PS1: PS-X EXE loader, GTE instructions, Psy-Q signatures
     ps1 = prebuilt {
       name = "ghidra_psx_ldr";
       url = "https://github.com/lab313ru/ghidra_psx_ldr/releases/download/2026.10.03/ghidra_12.0.4_PUBLIC_20261004_ghidra_psx_ldr.zip";
       sha256 = "1war7y16w659n6vi93v0zp0rqgp0xpnhqf54j9lslg3b6zsvnkgv";
+      forGhidra = "12.0.4";
       writable = true;   # Psy-Q .gdt archives need lock files beside them
     };
     # Waiting for nixpkgs Ghidra 12.1 (their releases target 12.1.x) or a source build:
