@@ -29,12 +29,13 @@ let
     asm-differ = import ./pkgs/asm-differ { inherit pkgs; };
     binutils-mipsel = import ./pkgs/binutils-mipsel { inherit pkgs; };
     ghidra = import ./pkgs/ghidra { inherit pkgs; };   # ghidra.ps2, ghidra.ps1
+    decomp-permuter = import ./pkgs/decomp-permuter { inherit pkgs; };  # source tree; nix-copy to a burst box
   };
   lib = import ./lib { inherit pkgs tools; };
 in
 {
   inherit lib;
-  inherit (tools) objdiff binutils-mips-ps2 rename-field ccc ghidra decomp-guard rank-functions progress-readme old-gcc ee-gcc maspsx asm-differ binutils-mipsel;
+  inherit (tools) objdiff binutils-mips-ps2 rename-field ccc ghidra decomp-guard rank-functions progress-readme old-gcc ee-gcc maspsx asm-differ binutils-mipsel decomp-permuter;
   lombyte = import ./projects/lombyte { inherit pkgs lib tools; };
   bokura-no-kazoku = import ./projects/bokura-no-kazoku { inherit pkgs lib tools; };
   crash-bash = import ./projects/crash-bash { inherit pkgs lib tools; };
