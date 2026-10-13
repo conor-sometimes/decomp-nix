@@ -42,7 +42,15 @@ shared base plus the same PS2 toolbox everywhere (binutils-mips-ps2, ccc, ghidra
 Every project builds on [lib/mkDecompEnv.nix](lib/mkDecompEnv.nix) (the shared base: gcc
 multilib, the tools to build old compilers, ninja, Python with decomp-permuter's packages).
 
-## Use
+## Use (flake)
+
+    nix run github:conor-sometimes/decomp-nix#bokura-no-kazoku -- -c 'make'   # a command in an env
+    nix develop github:conor-sometimes/decomp-nix#crash-bash                  # an interactive shell in it
+    nix build github:conor-sometimes/decomp-nix#ghidra-ps2                    # any tool
+
+`flake.lock` pins nixpkgs; [flake.nix](flake.nix) is a thin wrapper over default.nix.
+
+## Use (without flakes)
 
 From a project clone:
 
