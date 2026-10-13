@@ -21,6 +21,8 @@ let
     rename-field = import ./pkgs/rename-field { inherit pkgs; };
     ccc = import ./pkgs/ccc { inherit pkgs; };
     decomp-guard = import ./pkgs/decomp-guard { inherit pkgs; };
+    rank-functions = import ./pkgs/rank-functions { inherit pkgs; };
+    progress-readme = import ./pkgs/progress-readme { inherit pkgs; };
     old-gcc = import ./pkgs/old-gcc { inherit pkgs; };   # old-gcc.gcc-2_8_1-psx, ...
     ee-gcc = import ./pkgs/ee-gcc { inherit pkgs; };     # ee-gcc.ee-gcc2_96, ... (PS2)
     maspsx = import ./pkgs/maspsx { inherit pkgs; };
@@ -32,7 +34,7 @@ let
 in
 {
   inherit lib;
-  inherit (tools) objdiff binutils-mips-ps2 rename-field ccc ghidra decomp-guard old-gcc ee-gcc maspsx asm-differ binutils-mipsel;
+  inherit (tools) objdiff binutils-mips-ps2 rename-field ccc ghidra decomp-guard rank-functions progress-readme old-gcc ee-gcc maspsx asm-differ binutils-mipsel;
   lombyte = import ./projects/lombyte { inherit pkgs lib tools; };
   bokura-no-kazoku = import ./projects/bokura-no-kazoku { inherit pkgs lib tools; };
   crash-bash = import ./projects/crash-bash { inherit pkgs lib tools; };
