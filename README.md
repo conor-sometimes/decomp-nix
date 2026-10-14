@@ -1,7 +1,23 @@
 # decomp-nix
 
-Nix packages for matching decompilation projects: build environments and toolchains,
-declared once and cached, instead of per-machine setup scripts, containers or distroboxes.
+Declarative, reproducible build environments and toolchains for **matching decompilation** — the
+whole fragile stack declared once in Nix and cached, instead of per-machine setup scripts,
+containers or distroboxes.
+
+Matching decomp needs an exact toolchain: decade-old console compilers (patched 1997 GCCs, Sony
+EE-GCC, Psy-Q), Windows-only SDK assemblers run under Wine, and Ghidra with the right processor
+module — normally a brittle per-machine install. Here it's one Nix closure: a fresh clone plus one
+command is the exact environment a project needs, byte-for-byte. Three real decompilations build
+identically from it today — Lombyte (Ratchet & Clank, PS2), Bokura no Kazoku (PS2) and Crash Bash
+(PS1) — and because every environment is a Nix derivation, a change that leaves the derivation hash
+unchanged is a **provable** no-op (the refactor receipt you can't get on an ordinary OS).
+
+## Quick start
+
+    nix develop github:conor-sometimes/decomp-nix#crash-bash   # drop into the PS1 build environment
+    nix run    github:conor-sometimes/decomp-nix#ghidra-ps2     # or just grab one tool
+
+## Projects
 
 | Project | Platform | Nix file | What's here |
 | --- | --- | --- | --- |
