@@ -7,7 +7,7 @@
 # demangle), ghidra-ps2 (Ghidra + the Emotion Engine extension, `ghidra-ps2 analyze`), and the
 # Sony EE-GCC builds as folders under $DECOMP_COMPILERS (ee-gcc2.96, ee-gcc2.9-991111, ...):
 # link a project's tools/compilers/<name> to $DECOMP_COMPILERS/<name>.
-{ mkDecompEnv, tools, pkgs }:
+{ mkPlatform, tools, pkgs }:
 
 let
   # decomp-permuter scores by disassembling the target with `mips-linux-gnu-objdump -drz -m mips:4300`.
@@ -23,14 +23,7 @@ let
     paths = builtins.attrValues tools.ee-gcc;
   };
 in
-{
+mkPlatform {
   tools = ps2Tools;
   inherit compilers;
-  mkEnv = args@{ packages ? (p: [ ]), profile ? "", ... }:
-    mkDecompEnv (args // {
-      packages = p: ps2Tools ++ packages p;
-      profile = ''
-        export DECOMP_COMPILERS=${compilers}
-      '' + profile;
-    });
 }
