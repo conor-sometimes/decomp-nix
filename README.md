@@ -6,7 +6,7 @@ declared once and cached, instead of per-machine setup scripts, containers or di
 | Project | Platform | Nix file | What's here |
 | --- | --- | --- | --- |
 | [Lombyte](https://github.com/lombyte-project/Lombyte) (Ratchet & Clank) | PS2 | [projects/lombyte/default.nix](projects/lombyte/default.nix) | `lombyte.env`: build environment (Wine for the SN tools) |
-| Bokura no Kazoku (private decomp) | PS2 | [projects/bokura-no-kazoku/default.nix](projects/bokura-no-kazoku/default.nix) | `bokura-no-kazoku.env`: PS2 env; its compiler, EE-GCC 2.96 (-O2 -G0), is `$DECOMP_COMPILERS/ee-gcc2.96` |
+| Bokura no Kazoku (private decomp) | PS2 | [projects/bokura-no-kazoku/default.nix](projects/bokura-no-kazoku/default.nix) | `bokura-no-kazoku.env`: PS2 env; its compiler, EE-GCC 2.96 (-O2 -G0 -fno-strict-aliasing), is `$DECOMP_COMPILERS/ee-gcc2.96` |
 | Crash Bash (private decomp) | PS1 | [projects/crash-bash/default.nix](projects/crash-bash/default.nix) | `crash-bash.env`: PS1 env (Psy-Q GCC 2.8.1, maspsx, mipsel binutils, just, uv) |
 
 ## Tools
@@ -21,6 +21,7 @@ declared once and cached, instead of per-machine setup scripts, containers or di
 | `rename-field` | `rename-field STRUCT OLD NEW [PATH...]` | IDA-style field rename: only where the type really is that struct (Coccinelle); prints what it couldn't reach (macro args, unparseable code) |
 | `ccc` | `stdump`, `uncc`, `demangle` | PS2 symbol tables: STABS/ELF/SNDLL types and signatures, skeleton sources, GCC 2.x demangling; in PS2 envs |
 | `decomp-guard` | `decomp-guard install` / `check` | pre-commit hook that refuses game data (extensions, boot-executable names, ELF/PS-X EXE/ISO/ROM bytes, generated paths, big binaries); plain bash, also runs without Nix; in every env |
+| `perm-lines` | `perm-lines SRC --cc CMD --symbol NAME --target-elf ELF --addr A` | statement-order brute force for MIPS, C or C++ (decomp-permuter is C only): reorders the lines marked `//@p`, compiles in parallel, reads objects without objdump, hill-climbs on swaps past 5040 orders and prints the closest order; in every env |
 | `old-gcc.*` | (folders) | old console GCCs from decompals/old-gcc, e.g. `old-gcc.gcc-2_8_1-psx` |
 | `ee-gcc.*` | (folders) | Sony EE-GCC builds from decomp.me's mirror (2.96, 2.9-991111/-01/a, 2.9-990721, 3.2-040921), under `$DECOMP_COMPILERS` in PS2 envs |
 | `maspsx` | `maspsx` | Psy-Q assembler behaviour for GNU as (PS1) |

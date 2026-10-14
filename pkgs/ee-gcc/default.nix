@@ -27,7 +27,7 @@ let
     };
 in
 {
-  # Bokura no Kazoku's compiler: confirmed on eight functions, -O2 -G0 (docs/compiler.md there)
+  # Bokura no Kazoku's compiler: confirmed on eight functions, -O2 -G0 -fno-strict-aliasing (docs/compiler.md there)
   ee-gcc2_96 = release { name = "ee-gcc2.96"; sha256 = "0590d2ca9da8f5903889d66761220d14b47a8d14ba987ca53db84a1650a1fd0a"; };
   # Other candidates, for the next PS2 game's compiler hunt
   ee-gcc2_9-991111 = release { name = "ee-gcc2.9-991111"; sha256 = "99cb5db603cd985b50fc6851157020ad69489f2227309ccf825bd43ac7bc19dd"; };
