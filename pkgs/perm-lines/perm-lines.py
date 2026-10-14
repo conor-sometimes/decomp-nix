@@ -32,15 +32,20 @@ def read_obj(path, symbol):
     sh = [struct.unpack_from("<10I", b, shoff + 40 * i) for i in range(shnum)]
     name = lambda tab, o: b[sh[tab][4] + o:b.index(b"\0", sh[tab][4] + o)].decode()
     hit = None
+    starts = []  # (section, value) of every symbol, to bound a size-0 symbol
     for s in sh:
         if s[1] == 2:  # SHT_SYMTAB
             for k in range(s[5] // 16):
                 st_name, val, size, info, _, shndx = struct.unpack_from("<IIIBBH", b, s[4] + 16 * k)
+                if 0 < shndx < len(sh):
+                    starts.append((shndx, val))
                 if st_name and info & 0xF == 2 and name(s[6], st_name) == symbol:
                     hit = (shndx, val, size)
     if hit is None:
         raise KeyError(symbol)
     sec, val, size = hit
+    if size == 0:  # retail / per-function extracted objects leave st_size 0: up to the next symbol
+        size = min([v for t, v in starts if t == sec and v > val], default=sh[sec][5]) - val
     code = b[sh[sec][4] + val:sh[sec][4] + val + size]
     masks = {}
     for s in sh:
@@ -95,7 +100,7 @@ def score(order):
         mine, masks = read_obj(obj, a.symbol)
     except KeyError:
         return 10**6, order
-    theirs = G["target"] or read_elf(a.target_elf, a.addr, 4 * len(mine))
+    theirs = G["target"] if G["target"] is not None else read_elf(a.target_elf, a.addr, 4 * len(mine))
     m, t = trim(mine), trim(theirs)
     bad = 0 if len(m) == len(t) else 1000
     bad += sum((x ^ y) & masks.get(4 * i, 0xFFFFFFFF) != 0 for i, (x, y) in enumerate(zip(m, t)))
@@ -124,6 +129,8 @@ def main():
         target = read_obj(a.target_obj, a.symbol)[0]
     elif a.size:
         target = read_elf(a.target_elf, a.addr, a.size)
+    if target is not None and not trim(target):
+        p.error(f"the target {a.symbol} has no code (size 0 and nothing after it in its section)")
 
     lines = open(a.src).read().splitlines(keepends=True)
     idx = [k for k, l in enumerate(lines) if l.rstrip().endswith(a.mark)]
