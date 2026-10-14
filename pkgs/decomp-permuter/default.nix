@@ -1,6 +1,8 @@
-# decomp-permuter (simonlindholm/decomp-permuter): the permuter source, placed at /opt/permuter so
-# a decomp image can run `python3 /opt/permuter/permuter.py`. The Python deps (pycparser, toml,
-# levenshtein) come from the env's python, not from here.
+# decomp-permuter (simonlindholm/decomp-permuter): the permuter source at /opt/permuter, plus a
+# `permuter` command on PATH so every env can run it without a per-project clone. The command execs
+# the env's own `python3` (so it picks up the env's pycparser/toml/levenshtein) and finds the
+# platform's `mips-linux-gnu-objdump` on PATH (PS2 env provides it). `.src` is still exposed for
+# shipping the source elsewhere.
 { pkgs }:
 
 let
@@ -12,6 +14,12 @@ let
   };
 in
 pkgs.runCommand "decomp-permuter" { passthru = { inherit src; }; } ''
-  mkdir -p $out/opt/permuter
+  mkdir -p $out/opt/permuter $out/bin
   cp -r ${src}/. $out/opt/permuter/
+  cat > $out/bin/permuter <<EOF
+  #!/usr/bin/env bash
+  # run decomp-permuter with the env's python (holds pycparser/toml/levenshtein) and objdump on PATH
+  exec python3 $out/opt/permuter/permuter.py "\$@"
+  EOF
+  chmod +x $out/bin/permuter
 ''

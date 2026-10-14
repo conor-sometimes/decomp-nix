@@ -37,8 +37,9 @@ pkgs.buildFHSEnv {
     tools.decomp-guard   # decomp-guard install: pre-commit hook that refuses game data
     tools.rank-functions # rank-functions: unmatched functions, easiest first
     tools.perm-lines # perm-lines: statement-order brute force (C or C++), parallel
+    tools.decomp-permuter # permuter: the full randomizing permuter (C only); PATH command, no per-project clone
     tools.progress-readme # progress-readme README.md ...: the progress section at the top of a README
-    (python3.withPackages (ps: with ps; [ pycparser toml levenshtein ] ++ pythonPackages ps))  # decomp-permuter
+    (python3.withPackages (ps: with ps; [ pycparser toml levenshtein ] ++ pythonPackages ps))  # decomp-permuter deps
   ] ++ pkgs.lib.optional wine p.wineWow64Packages.stable
     ++ packages p;
   # 32-bit runtime for prebuilt i386 compilers (glibc comes with the FHS base)
