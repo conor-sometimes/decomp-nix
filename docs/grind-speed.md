@@ -57,7 +57,24 @@ candidate drops toward just cc1's per-function time.
 5. Keep a `wineserver -p` warm so step 3 never pays the 1 s cold-start.
 Net: ~685 ms/candidate -> ~50 ms/candidate (~13x), before even raising K past 20.
 
+## Lombyte obstacle (found building a prototype batch grinder, 2026-10-14)
+Rename-to-batch works for the COMPILE (ee-gcc295 + Ps2EeAs over K renamed copies = 13x, bytes
+identical), BUT Lombyte's `padless-asm` pass is **function-name-aware**: `externs` applies the
+per-function stage file's sda/gprel declarations, and `finish`/`reference` key off the function by
+name. The renamed copies (`FUN_..._v0`) miss that handling, so their external address loads stay in
+the long form -> wrong instruction count (start DIFF jumps 25 -> ~1200). So the clean 13x batch gives
+WRONG bytes for Lombyte's SN route; the correct bytes need the name-matched padless pass, which does
+not batch via renaming. (Native/simple pipelines like Bokura's C++ have no such pass -> batching flies
+there; that's where the Bokura window's win lives.)
+
+Realistic Lombyte paths, in order:
+- **Cheap, no obstacle:** persistent `wineserver -p` (no cold-start), `/dev/shm` temps, warm wine.
+- **~3x partial batch:** batch ee-gcc295 + Ps2EeAs (the Wine cost), run padless per-function after
+  (the name-aware part stays per-candidate) -> amortise ~480ms Wine over K, pay ~200ms padless each.
+- **Full 13x** would need padless made batch-aware (apply each `_vN`'s externs/finish by its own name)
+  -- a deeper change to Lombyte's build tooling, not worth it yet.
+
 ## Next
-- [ ] Build it: a perm-lines **batch mode** (writes K variants, one compile, K scores) is the home for
-      this — coordinate with the Bokura window (their tool); this doc is the validated Lombyte recipe.
-      Or a standalone batch grinder that reuses perm-lines' read_obj.
+- Batch mode belongs in the **Bokura window's** world where it's a clean 13x (native, no padless).
+- For Lombyte: take the cheap wins; revisit partial batching only if grind throughput becomes the bottleneck.
+- Prototype `batch-perm.py` kept in the job scratchpad; parks until padless-batch-awareness is worth it.
