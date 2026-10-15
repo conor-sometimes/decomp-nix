@@ -39,6 +39,10 @@ pkgs.buildFHSEnv {
     tools.perm-lines # perm-lines: statement-order brute force (C or C++), parallel
     tools.decomp-permuter # permuter: the full randomizing permuter (C only); PATH command, no per-project clone
     tools.progress-readme # progress-readme README.md ...: the progress section at the top of a README
+    tools.lane-merge     # lane-merge resolve|check|fix-includes|alias-undefined: merging parallel lanes
+    tools.decomp-where   # decomp-where TARGET BUILT MAP: where a build stopped matching
+    tools.split-units    # split-units: cut code without vtables into units (splat yaml)
+    tools.sjis-strings   # sjis-strings FILE: Japanese (Shift-JIS) strings as TSV
     (python3.withPackages (ps: with ps; [ pycparser toml levenshtein ] ++ pythonPackages ps))  # decomp-permuter deps
   ] ++ pkgs.lib.optional wine p.wineWow64Packages.stable
     ++ packages p;

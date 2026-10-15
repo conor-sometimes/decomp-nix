@@ -24,6 +24,11 @@ let
     rank-functions = import ./pkgs/rank-functions { inherit pkgs; };
     perm-lines = import ./pkgs/perm-lines { inherit pkgs; };
     progress-readme = import ./pkgs/progress-readme { inherit pkgs; };
+    lane-merge = import ./pkgs/lane-merge { inherit pkgs; };
+    decomp-where = import ./pkgs/decomp-where { inherit pkgs; };
+    split-units = import ./pkgs/split-units { inherit pkgs; };
+    sjis-strings = import ./pkgs/sjis-strings { inherit pkgs; };
+    compiler-sweep = import ./pkgs/compiler-sweep { inherit pkgs; };   # PS2
     old-gcc = import ./pkgs/old-gcc { inherit pkgs; };   # old-gcc.gcc-2_8_1-psx, ...
     ee-gcc = import ./pkgs/ee-gcc { inherit pkgs; };     # ee-gcc.ee-gcc2_96, ... (PS2)
     maspsx = import ./pkgs/maspsx { inherit pkgs; };
@@ -36,7 +41,7 @@ let
 in
 {
   inherit lib;
-  inherit (tools) objdiff binutils-mips-ps2 rename-field ccc ghidra decomp-guard rank-functions perm-lines progress-readme old-gcc ee-gcc maspsx asm-differ binutils-mipsel decomp-permuter;
+  inherit (tools) objdiff binutils-mips-ps2 rename-field ccc ghidra decomp-guard rank-functions perm-lines progress-readme lane-merge decomp-where split-units sjis-strings compiler-sweep old-gcc ee-gcc maspsx asm-differ binutils-mipsel decomp-permuter;
   lombyte = import ./projects/lombyte { inherit pkgs lib tools; };
   bokura-no-kazoku = import ./projects/bokura-no-kazoku { inherit pkgs lib tools; };
   crash-bash = import ./projects/crash-bash { inherit pkgs lib tools; };

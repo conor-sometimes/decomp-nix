@@ -52,8 +52,20 @@ why_bad() { # path staged? -> prints a reason if the file is game data
     # ISO 9660: "CD001" at byte 0x8001 (hex offset 0x10002)
     [ "${hex:65538:10}" = 4344303031 ] && { echo "ISO 9660 image"; return; }
     size=$(size_of "$f" "$mode")
-    if [ "${size:-0}" -gt 5242880 ] && read_head "$f" "$mode" | LC_ALL=C grep -q "$(printf '\000')" 2>/dev/null; then
-        echo "binary over 5 MB"; return
+    # NUL bytes in the first 36 KB mean binary. (Counted with tr: `grep "$(printf '\000')"` is an
+    # empty pattern, since command substitution drops NULs, and matched every file.)
+    local total nonul high
+    total=$(read_head "$f" "$mode" | wc -c | tr -d ' ')
+    nonul=$(read_head "$f" "$mode" | LC_ALL=C tr -d '\000' | wc -c | tr -d ' ')
+    if [ "${size:-0}" -gt 5242880 ]; then
+        if [ "$nonul" != "$total" ]; then echo "binary over 5 MB"; return; fi
+        # a text file this big is generated or duplicated (Bokura: HARD.md grew to 45 MB of repeats)
+        echo "text file over 5 MB (generated, or lines duplicated?)"; return
+    fi
+    # Mostly-Japanese text (UTF-8 or Shift-JIS) is extracted game text: script dumps, string tables.
+    if [ "${total:-0}" -ge 1024 ] && [ "$nonul" = "$total" ]; then
+        high=$(read_head "$f" "$mode" | LC_ALL=C tr -d '\000-\177' | wc -c | tr -d ' ')
+        if [ $((high * 100 / total)) -ge 40 ]; then echo "mostly Japanese text (extracted game text?)"; return; fi
     fi
 }
 

@@ -22,7 +22,7 @@ unchanged is a **provable** no-op (the refactor receipt you can't get on an ordi
 | Project | Platform | Nix file | What's here |
 | --- | --- | --- | --- |
 | [Lombyte](https://github.com/lombyte-project/Lombyte) (Ratchet & Clank) | PS2 | [projects/lombyte/default.nix](projects/lombyte/default.nix) | `lombyte.env`: build environment (Wine for the SN tools) |
-| Bokura no Kazoku (private decomp) | PS2 | [projects/bokura-no-kazoku/default.nix](projects/bokura-no-kazoku/default.nix) | `bokura-no-kazoku.env`: PS2 env; its compiler, EE-GCC 2.96 (-O2 -G0 -fno-strict-aliasing), is `$DECOMP_COMPILERS/ee-gcc2.96` |
+| Bokura no Kazoku (private decomp) | PS2 | [projects/bokura-no-kazoku/default.nix](projects/bokura-no-kazoku/default.nix) | `bokura-no-kazoku.env`: PS2 env; four toolchains set per unit: EE-GCC 2.96 (-O2 -G0 -fno-strict-aliasing -fno-exceptions, `-Wa,-g` for the C++ and dklib units), ee-gcc 2.9-991111 and 2.9-991111-01 for SDK code (both with 2.96's as) |
 | Crash Bash (private decomp) | PS1 | [projects/crash-bash/default.nix](projects/crash-bash/default.nix) | `crash-bash.env`: PS1 env (Psy-Q GCC 2.8.1, maspsx, mipsel binutils, just, uv) |
 
 ## Tools
@@ -36,7 +36,13 @@ unchanged is a **provable** no-op (the refactor receipt you can't get on an ordi
 | (nixpkgs) | `spatch` | Coccinelle, type-aware renames across C; in every env |
 | `rename-field` | `rename-field STRUCT OLD NEW [PATH...]` | IDA-style field rename: only where the type really is that struct (Coccinelle); prints what it couldn't reach (macro args, unparseable code) |
 | `ccc` | `stdump`, `uncc`, `demangle` | PS2 symbol tables: STABS/ELF/SNDLL types and signatures, skeleton sources, GCC 2.x demangling; in PS2 envs |
-| `decomp-guard` | `decomp-guard install` / `check` | pre-commit hook that refuses game data (extensions, boot-executable names, ELF/PS-X EXE/ISO/ROM bytes, generated paths, big binaries); plain bash, also runs without Nix; in every env |
+| `decomp-guard` | `decomp-guard install` / `check` | pre-commit hook that refuses game data (extensions, boot-executable names, ELF/PS-X EXE/ISO/ROM bytes, generated paths, big binaries, text files over 5 MB, mostly-Japanese text such as extracted script dumps); plain bash, also runs without Nix; in every env |
+| `lane-merge` | `lane-merge resolve` / `check [--fix]` / `fix-includes` / `alias-undefined LOG` | merging parallel lanes in a splat decomp: union-resolves symbol files and notes, takes the C side over a leftover INCLUDE_ASM, finds one address with two names, renames INCLUDE_ASMs another lane renamed, aliases old names callers still use; in every env |
+| `decomp-where` | `decomp-where TARGET BUILT MAP` | when a build stops matching: the first symbols that moved (and the last one that didn't), or every function holding differing bytes; ELF, PS-X EXE or raw; in every env |
+| `split-units` | `split-units ASM... --range LO HI --rom-delta D --rodata LO HI` | cuts code with no vtables into plausible translation units (splat yaml lines): only where no .rodata literal is shared across the cut; `--size-only` for libraries; in every env |
+| `sjis-strings` | `sjis-strings FILE...` | Japanese (Shift-JIS) strings in an ELF's data sections or any file, as TSV with the space each has; in every env |
+| `compiler-sweep` | `compiler-sweep SNIPPET --target ELF --addr A [--name F]` | compiles one function with every EE-GCC under `$DECOMP_COMPILERS`, as C and C++, with/without `-Wa,-g`, with each other build's assembler, and ranks the variants against the target: finds a unit's toolchain in a minute; in PS2 envs |
+| (nixpkgs) | `vgmstream-cli` | game audio (Sony XWB/ADS/VAG, ...) to WAV; in PS2 envs |
 | `perm-lines` | `perm-lines SRC --cc CMD --symbol NAME --target-elf ELF --addr A` | statement-order brute force for MIPS, C or C++ (decomp-permuter is C only): reorders the lines marked `//@p`, compiles in parallel, reads objects without objdump, hill-climbs on swaps past 5040 orders and prints the closest order; in every env |
 | `old-gcc.*` | (folders) | old console GCCs from decompals/old-gcc, e.g. `old-gcc.gcc-2_8_1-psx` |
 | `ee-gcc.*` | (folders) | Sony EE-GCC builds from decomp.me's mirror (2.96, 2.9-991111/-01/a, 2.9-990721, 3.2-040921), under `$DECOMP_COMPILERS` in PS2 envs |
@@ -54,7 +60,7 @@ binutils, maspsx, asm-differ, ghidra-ps1, just and uv, plus the old PS1 compiler
 `$DECOMP_COMPILERS` (gcc-2.8.1-psx, ...; link a project's `tools/<name>` there).
 
 PS2 projects use [lib/platforms/ps2.nix](lib/platforms/ps2.nix) (`lib.platforms.ps2.mkEnv`): the
-shared base plus the same PS2 toolbox everywhere (binutils-mips-ps2, ccc, ghidra-ps2, and the EE-GCC builds under `$DECOMP_COMPILERS`).
+shared base plus the same PS2 toolbox everywhere (binutils-mips-ps2, ccc, ghidra-ps2, compiler-sweep, vgmstream, and the EE-GCC builds under `$DECOMP_COMPILERS`). Its header has PS2 matching notes (mixed toolchains in one game, the GNU as 2.10 `lui` bug).
 
 Every project builds on [lib/mkDecompEnv.nix](lib/mkDecompEnv.nix) (the shared base: gcc
 multilib, the tools to build old compilers, ninja, Python with decomp-permuter's packages).
