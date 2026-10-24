@@ -2,7 +2,8 @@
 #
 #   platforms.psp.mkEnv { name = "fat-princess"; wine = true; }   # plus any mkDecompEnv option
 #
-# Adds to the shared base: pspdecrypt (retail EBOOT.BIN -> plain ELF/PRX: UMDs zero the plain
+# Adds to the shared base: pspdev binutils (psp-as, psp-ld, ...: the only GNU assembler with the
+# VFPU), pspdecrypt (retail EBOOT.BIN -> plain ELF/PRX: UMDs zero the plain
 # BOOT.BIN), little-endian MIPS binutils (GNU binutils knows the Allegrex since 2.42:
 # `as -march=allegrex`, `objdump -m mips:allegrex`), asm-differ, ghidra-psp (Ghidra +
 # ghidra-allegrex: Allegrex/VFPU processor, PSP ELF/PRX loader, NID names for imports), 7zz
@@ -31,7 +32,7 @@ let
   };
 in
 mkPlatform {
-  tools = [ tools.binutils-mipsel tools.pspdecrypt tools.asm-differ tools.ghidra.psp permuterObjdump
+  tools = [ tools.binutils-mipsel tools.binutils-allegrex tools.pspdecrypt tools.asm-differ tools.ghidra.psp permuterObjdump
             pkgs._7zz pkgs.just pkgs.uv ];
   inherit compilers;
 }

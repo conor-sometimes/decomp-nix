@@ -24,7 +24,7 @@ unchanged is a **provable** no-op (the refactor receipt you can't get on an ordi
 | [Lombyte](https://github.com/lombyte-project/Lombyte) (Ratchet & Clank) | PS2 | [projects/lombyte/default.nix](projects/lombyte/default.nix) | `lombyte.env`: build environment (Wine for the SN tools) |
 | Bokura no Kazoku (private decomp) | PS2 | [projects/bokura-no-kazoku/default.nix](projects/bokura-no-kazoku/default.nix) | `bokura-no-kazoku.env`: PS2 env; four toolchains set per unit: EE-GCC 2.96 (-O2 -G0 -fno-strict-aliasing -fno-exceptions, `-Wa,-g` for the C++ and dklib units), ee-gcc 2.9-991111 and 2.9-991111-01 for SDK code (both with 2.96's as) |
 | Crash Bash (private decomp) | PS1 | [projects/crash-bash/default.nix](projects/crash-bash/default.nix) | `crash-bash.env`: PS1 env (Psy-Q GCC 2.8.1, maspsx, mipsel binutils, just, uv) |
-| Fat Princess: Fistful of Cake (private decomp) | PSP | [projects/fat-princess/default.nix](projects/fat-princess/default.nix) | `fat-princess.env`: PSP env (pspdecrypt, Allegrex binutils, SNC/mwccpsp/psp-gcc, ghidra-psp, 7-Zip, Wine for SNC) |
+| Fat Princess: Fistful of Cake (private decomp) | PSP | [projects/fat-princess/default.nix](projects/fat-princess/default.nix) | `fat-princess.env`: PSP env (pspdecrypt, pspdev binutils with VFPU, SNC/mwccpsp/psp-gcc, ghidra-psp, 7-Zip, Wine for SNC); its `just build` rebuilds the retail PRX byte-for-byte |
 
 ## Tools
 
@@ -52,6 +52,7 @@ unchanged is a **provable** no-op (the refactor receipt you can't get on an ordi
 | `asm-differ` | `asm-differ` | quick per-function terminal diffs (diff.py) |
 | `binutils-mipsel` | `mipsel-linux-gnu-*` | little-endian MIPS binutils (PS1; PSP too: `as -march=allegrex`, `objdump -m mips:allegrex`) |
 | `pspdecrypt` | `pspdecrypt` | decrypts retail PSP executables (`~PSP` EBOOT.BIN, PRX) to plain ELF; UMDs zero the plain BOOT.BIN; in PSP envs |
+| `binutils-allegrex` | `psp-as`, `psp-ld`, `psp-objdump`, ... | [pspdev binutils](https://github.com/pspdev/binutils-gdb) 2.44 with the VFPU (mainline has the Allegrex, not its vector unit); in PSP envs |
 | `psp-compilers.*` | (folders) | PSP compilers from decomp.me's mirror (SNC 1.2.7503.0, mwccpsp 3.0.1 builds 121-219, psp-gcc 1.3.1/1.7.1), under `$DECOMP_COMPILERS` in PSP envs |
 
 `ghidra-<platform> analyze BINARY OUTDIR` runs headless: import, auto-analysis, then
