@@ -42,7 +42,8 @@ in
   mwccpsp3_0_1_205 = mwccpsp "205" "ace61d4641fcdff55c08b7560c95915b20243f0f18023c3d4ce99fe37c5cdb00";
   mwccpsp3_0_1_210 = mwccpsp "210" "a8a0bf3a0ec3545f6578717516aad0f262a40dd1538a6e462b77efc29e79a969";
   mwccpsp3_0_1_219 = mwccpsp "219" "81a2a8664d779901f6fa2f298b663b4b0feeb1d7f6613fd14531f51e66926d78";
-  # pspdev GCC (homebrew toolchain)
+  # pspdev GCC (homebrew toolchain). As decomp.me ships them: psp/bin/as is a 0-byte file in its
+  # tarballs (the gcc driver and cc1 are fine), so assemble with binutils-allegrex (psp-as).
   psp-gcc1_3_1 = release { name = "psp-gcc-1.3.1"; sha256 = "788b6d2c0ed920da6b1e5a350d23dd7ea05820526e23f9b5b967b3b238ea2e2e"; };
   psp-gcc1_7_1 = release { name = "psp-gcc-1.7.1"; sha256 = "55d4267b1d74855157501d5fd61ed31b68d961a737306b5831b582a2d58f3484"; };
 }

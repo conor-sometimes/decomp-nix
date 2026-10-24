@@ -14,8 +14,12 @@
 # PSP notes:
 # - Retail executables are relocatable PRX (ELF type 0xffa0) linked at 0 with .rel.* sections:
 #   every pointer is relocated, so splitting and a shiftable build start with the data you need.
-# - SNC (EDG front end) leaves `.cplinit`/`.linkonce.d` sections and "EDG gcc 3.4 mode" strings;
-#   mwccpsp builds run under wine like SNC.
+# - SNC (EDG front end) leaves `.cplinit`/`.linkonce.d` sections and "EDG gcc 3.4 mode" strings,
+#   and loads constants with `ori` (GCC uses `addiu`); mwccpsp builds run under wine like SNC.
+#   SNC's `-g` changes code generation (one return point, no inlining), so match per unit.
+# - Link a PRX at 64 KiB-aligned bases and take them back out of the relocated fields afterwards
+#   (as SN's pspprxgen did); rabbitizer's VFPU syntax for vpfxd/vrot isn't gas's: emit those as
+#   .word. Worked example: Fat Princess (fat-princess-decomp, tools/prx.py and tools/mkprx.py).
 { mkPlatform, tools, pkgs }:
 
 let
