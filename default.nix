@@ -36,13 +36,16 @@ let
     binutils-mipsel = import ./pkgs/binutils-mipsel { inherit pkgs; };
     ghidra = import ./pkgs/ghidra { inherit pkgs; };   # ghidra.ps2, ghidra.ps1
     decomp-permuter = import ./pkgs/decomp-permuter { inherit pkgs; };  # source tree; nix-copy to a burst box
+    pspdecrypt = import ./pkgs/pspdecrypt { inherit pkgs; };
+    psp-compilers = import ./pkgs/psp-compilers { inherit pkgs; };   # psp-compilers.pspsnc1_2_7503_0, ... (PSP)
   };
   lib = import ./lib { inherit pkgs tools; };
 in
 {
   inherit lib;
-  inherit (tools) objdiff binutils-mips-ps2 rename-field ccc ghidra decomp-guard rank-functions perm-lines progress-readme lane-merge decomp-where split-units sjis-strings compiler-sweep old-gcc ee-gcc maspsx asm-differ binutils-mipsel decomp-permuter;
+  inherit (tools) objdiff binutils-mips-ps2 rename-field ccc ghidra decomp-guard rank-functions perm-lines progress-readme lane-merge decomp-where split-units sjis-strings compiler-sweep old-gcc ee-gcc maspsx asm-differ binutils-mipsel decomp-permuter pspdecrypt psp-compilers;
   lombyte = import ./projects/lombyte { inherit pkgs lib tools; };
   bokura-no-kazoku = import ./projects/bokura-no-kazoku { inherit pkgs lib tools; };
   crash-bash = import ./projects/crash-bash { inherit pkgs lib tools; };
+  fat-princess = import ./projects/fat-princess { inherit pkgs lib tools; };
 }

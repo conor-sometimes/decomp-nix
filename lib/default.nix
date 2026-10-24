@@ -9,5 +9,6 @@ in
   platforms = {
     ps2 = import ./platforms/ps2.nix { inherit mkPlatform tools pkgs; };
     ps1 = import ./platforms/ps1.nix { inherit mkPlatform tools pkgs; };
+    psp = import ./platforms/psp.nix { inherit mkPlatform tools pkgs; };
   };
 }

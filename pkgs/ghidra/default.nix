@@ -1,4 +1,4 @@
-# Ghidra per console: ghidra-ps2, ghidra-ps1, ... (nixpkgs Ghidra + that platform's extension).
+# Ghidra per console: ghidra-ps2, ghidra-ps1, ghidra-psp, ... (nixpkgs Ghidra + that platform's extension).
 #
 #   ghidra-ps2                          # the GUI
 #   ghidra-ps2 analyze BINARY OUTDIR    # headless: import, auto-analyse, export
@@ -58,6 +58,13 @@ let
       forGhidra = "12.0.4";
       writable = true;   # Psy-Q .gdt archives need lock files beside them
     };
+    # PSP: Allegrex + VFPU processor, PSP ELF/PRX loader, import names from NIDs
+    psp = prebuilt {
+      name = "ghidra-allegrex";
+      url = "https://github.com/kotcrab/ghidra-allegrex/releases/download/v21.3/ghidra_12.0.4_PUBLIC_20260310_ghidra-allegrex.zip";
+      sha256 = "0awfvqh8x9jlpj3v8x6njh595136kq4aqxrigxbli0qz5j0dsn7k";
+      forGhidra = "12.0.4";
+    };
     # Waiting for nixpkgs Ghidra 12.1 (their releases target 12.1.x) or a source build:
     #   n64: zeroKilo/N64LoaderWV        gc/wii: Cuyler36/Ghidra-GameCube-Loader
     #   nds: pedro-javierf/NTRGhidra     gba: SiD3W4y/GhidraGBA (last built for 10.1)
@@ -100,4 +107,5 @@ in
   inherit extensions mkGhidra;
   ps2 = mkGhidra { name = "ps2"; platforms = [ "ps2" ]; };
   ps1 = mkGhidra { name = "ps1"; platforms = [ "ps1" ]; };
+  psp = mkGhidra { name = "psp"; platforms = [ "psp" ]; };
 }

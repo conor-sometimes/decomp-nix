@@ -24,6 +24,7 @@ unchanged is a **provable** no-op (the refactor receipt you can't get on an ordi
 | [Lombyte](https://github.com/lombyte-project/Lombyte) (Ratchet & Clank) | PS2 | [projects/lombyte/default.nix](projects/lombyte/default.nix) | `lombyte.env`: build environment (Wine for the SN tools) |
 | Bokura no Kazoku (private decomp) | PS2 | [projects/bokura-no-kazoku/default.nix](projects/bokura-no-kazoku/default.nix) | `bokura-no-kazoku.env`: PS2 env; four toolchains set per unit: EE-GCC 2.96 (-O2 -G0 -fno-strict-aliasing -fno-exceptions, `-Wa,-g` for the C++ and dklib units), ee-gcc 2.9-991111 and 2.9-991111-01 for SDK code (both with 2.96's as) |
 | Crash Bash (private decomp) | PS1 | [projects/crash-bash/default.nix](projects/crash-bash/default.nix) | `crash-bash.env`: PS1 env (Psy-Q GCC 2.8.1, maspsx, mipsel binutils, just, uv) |
+| Fat Princess: Fistful of Cake (private decomp) | PSP | [projects/fat-princess/default.nix](projects/fat-princess/default.nix) | `fat-princess.env`: PSP env (pspdecrypt, Allegrex binutils, SNC/mwccpsp/psp-gcc, ghidra-psp, 7-Zip, Wine for SNC) |
 
 ## Tools
 
@@ -31,6 +32,7 @@ unchanged is a **provable** no-op (the refactor receipt you can't get on an ordi
 | --- | --- | --- |
 | `ghidra.ps2` | `ghidra-ps2` | Ghidra 12.0.4 + [ghidra-emotionengine-reloaded](https://github.com/chaoticgd/ghidra-emotionengine-reloaded) (EE processor, STABS) |
 | `ghidra.ps1` | `ghidra-ps1` | Ghidra 12.0.4 + [ghidra_psx_ldr](https://github.com/lab313ru/ghidra_psx_ldr) (PS-X EXE, GTE, Psy-Q signatures and types) |
+| `ghidra.psp` | `ghidra-psp` | Ghidra 12.0.4 + [ghidra-allegrex](https://github.com/kotcrab/ghidra-allegrex) (Allegrex/VFPU, PSP ELF/PRX loader, NID names) |
 | `objdiff` | `objdiff-cli` | per-function object diffs and progress reports; in every env |
 | `binutils-mips-ps2` | `mips-ps2-decompals-*` | R5900-aware binutils (as, ld, objcopy, objdump, ...); in PS2 envs |
 | (nixpkgs) | `spatch` | Coccinelle, type-aware renames across C; in every env |
@@ -48,7 +50,9 @@ unchanged is a **provable** no-op (the refactor receipt you can't get on an ordi
 | `ee-gcc.*` | (folders) | Sony EE-GCC builds from decomp.me's mirror (2.96, 2.9-991111/-01/a, 2.9-990721, 3.2-040921), under `$DECOMP_COMPILERS` in PS2 envs |
 | `maspsx` | `maspsx` | Psy-Q assembler behaviour for GNU as (PS1) |
 | `asm-differ` | `asm-differ` | quick per-function terminal diffs (diff.py) |
-| `binutils-mipsel` | `mipsel-linux-gnu-*` | little-endian MIPS binutils (PS1) |
+| `binutils-mipsel` | `mipsel-linux-gnu-*` | little-endian MIPS binutils (PS1; PSP too: `as -march=allegrex`, `objdump -m mips:allegrex`) |
+| `pspdecrypt` | `pspdecrypt` | decrypts retail PSP executables (`~PSP` EBOOT.BIN, PRX) to plain ELF; UMDs zero the plain BOOT.BIN; in PSP envs |
+| `psp-compilers.*` | (folders) | PSP compilers from decomp.me's mirror (SNC 1.2.7503.0, mwccpsp 3.0.1 builds 121-219, psp-gcc 1.3.1/1.7.1), under `$DECOMP_COMPILERS` in PSP envs |
 
 `ghidra-<platform> analyze BINARY OUTDIR` runs headless: import, auto-analysis, then
 `OUTDIR/functions.json` (every function), `OUTDIR/symbol_addrs.txt` (named ones, splat format)
