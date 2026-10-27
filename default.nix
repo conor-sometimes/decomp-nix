@@ -49,4 +49,5 @@ in
   bokura-no-kazoku = import ./projects/bokura-no-kazoku { inherit pkgs lib tools; };
   crash-bash = import ./projects/crash-bash { inherit pkgs lib tools; };
   fat-princess = import ./projects/fat-princess { inherit pkgs lib tools; };
+  rac2 = import ./projects/rac2 { inherit pkgs lib tools; };
 }
