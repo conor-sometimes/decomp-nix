@@ -6,9 +6,7 @@
 #   fat-princess-env -c 'just build'     # from inside the decomp repo
 { pkgs, lib, tools }:
 
-{
-  env = lib.platforms.psp.mkEnv {
-    name = "fat-princess";
-    wine = true;
-  };
+lib.platforms.psp.mkEnv {
+  name = "fat-princess";
+  wine = true;
 }

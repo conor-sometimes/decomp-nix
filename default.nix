@@ -45,9 +45,16 @@ in
 {
   inherit lib;
   inherit (tools) objdiff binutils-mips-ps2 rename-field ccc ghidra decomp-guard rank-functions perm-lines progress-readme lane-merge decomp-where split-units sjis-strings compiler-sweep old-gcc ee-gcc maspsx asm-differ binutils-mipsel decomp-permuter pspdecrypt psp-compilers binutils-allegrex;
-  lombyte = import ./projects/lombyte { inherit pkgs lib tools; };
-  bokura-no-kazoku = import ./projects/bokura-no-kazoku { inherit pkgs lib tools; };
-  crash-bash = import ./projects/crash-bash { inherit pkgs lib tools; };
-  fat-princess = import ./projects/fat-princess { inherit pkgs lib tools; };
-  rac2 = import ./projects/rac2 { inherit pkgs lib tools; };
+  # Every project environment, one shape and one place — decomp, Python, Rust, whatever. Each
+  # returns { name; run; shell; image; runtime } from a runtime builder (lib/mkDecompEnv.nix for
+  # "fhs" decomp envs, lib/mkToolbox.nix for on-demand "container" toolboxes). Add one: a dir under
+  # projects/ and a line here. The flake exposes them all alike (nix run .#<name> -- -c 'cmd').
+  projects = {
+    lombyte          = import ./projects/lombyte { inherit pkgs lib tools; };
+    bokura-no-kazoku = import ./projects/bokura-no-kazoku { inherit pkgs lib tools; };
+    crash-bash       = import ./projects/crash-bash { inherit pkgs lib tools; };
+    fat-princess     = import ./projects/fat-princess { inherit pkgs lib tools; };
+    rac2             = import ./projects/rac2 { inherit pkgs lib tools; };
+    pktlib           = import ./projects/pktlib { inherit pkgs lib tools; };
+  };
 }

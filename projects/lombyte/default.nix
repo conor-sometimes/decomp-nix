@@ -5,9 +5,7 @@
 #   lombyte-env -c 'make elf'       # one command, from inside a Lombyte clone
 { pkgs, lib, tools }:
 
-{
-  env = lib.platforms.ps2.mkEnv {
-    name = "lombyte";
-    wine = true;
-  };
+lib.platforms.ps2.mkEnv {
+  name = "lombyte";
+  wine = true;
 }

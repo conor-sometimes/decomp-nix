@@ -20,7 +20,7 @@
   profile ? "",                # extra shell setup
 }:
 
-pkgs.buildFHSEnv {
+let e = pkgs.buildFHSEnv {
   name = "${name}-env";
   multiArch = true;   # include the 32-bit (i686) side: without it multiPkgs and /lib/ld-linux.so.2 are missing
   targetPkgs = p: with p; [
@@ -52,4 +52,15 @@ pkgs.buildFHSEnv {
     export WINEDEBUG=-all
   '' + profile;
   runScript = "bash";
+};
+in
+# the common project shape: a decomp env is just the "fhs" runtime — the same
+# { name; run; shell; image; runtime } a container toolbox returns, so the flake treats every
+# project alike (decomp, python, rust, ...), with the runtime a per-project knob, not a split.
+{
+  inherit name;
+  run = e;         # the FHS env (bin/${name}-env); `nix run .#<project> -- -c 'cmd'`
+  shell = e.env;   # its interactive devShell; `nix develop .#<project>`
+  image = null;
+  runtime = "fhs";
 }

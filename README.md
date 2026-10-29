@@ -19,12 +19,35 @@ unchanged is a **provable** no-op (the refactor receipt you can't get on an ordi
 
 ## Projects
 
-| Project | Platform | Nix file | What's here |
+Every project environment — a decomp, a Python library, a Rust crate — lives under
+[projects/](projects/), is declared the same way, and is run the same way:
+
+    nix run .#<project> -- -c 'cmd'     # run a command in any project env
+    nix develop .#<project>             # drop into it (fhs envs)
+
+Each project picks a **runtime** (how the env is realised, not a different kind of thing):
+
+- **fhs** ([lib/mkDecompEnv.nix](lib/mkDecompEnv.nix)) — a `buildFHSEnv` shell with the toolchain on
+  the host, for prebuilt compilers that expect `/usr/lib`. The decomp envs.
+- **container** ([lib/mkToolbox.nix](lib/mkToolbox.nix)) — an on-demand OCI image (nix-built, in the
+  store; nothing runs until a job does) that `podman run --rm`s with CPU/memory caps and the project
+  bind-mounted at `/work`, then tears down. For offloading slow suites, resource caps, keeping a
+  runtime off the host. (A different lifecycle from the always-on agent-containment boxes — here the
+  container is for reproducibility and caps, not isolation.)
+
+| Project | Runtime | Nix file | What's here |
 | --- | --- | --- | --- |
-| [Lombyte](https://github.com/lombyte-project/Lombyte) (Ratchet & Clank) | PS2 | [projects/lombyte/default.nix](projects/lombyte/default.nix) | `lombyte.env`: build environment (Wine for the SN tools) |
-| Bokura no Kazoku (private decomp) | PS2 | [projects/bokura-no-kazoku/default.nix](projects/bokura-no-kazoku/default.nix) | `bokura-no-kazoku.env`: PS2 env; four toolchains set per unit: EE-GCC 2.96 (-O2 -G0 -fno-strict-aliasing -fno-exceptions, `-Wa,-g` for the C++ and dklib units), ee-gcc 2.9-991111 and 2.9-991111-01 for SDK code (both with 2.96's as) |
-| Crash Bash (private decomp) | PS1 | [projects/crash-bash/default.nix](projects/crash-bash/default.nix) | `crash-bash.env`: PS1 env (Psy-Q GCC 2.8.1, maspsx, mipsel binutils, just, uv) |
-| Fat Princess: Fistful of Cake (private decomp) | PSP | [projects/fat-princess/default.nix](projects/fat-princess/default.nix) | `fat-princess.env`: PSP env (pspdecrypt, pspdev binutils with VFPU, SNC/mwccpsp/psp-gcc, ghidra-psp, 7-Zip, Wine for SNC); its `just build` rebuilds the retail PRX byte-for-byte |
+| [Lombyte](https://github.com/lombyte-project/Lombyte) (Ratchet & Clank, PS2) | fhs | [projects/lombyte/default.nix](projects/lombyte/default.nix) | `lombyte-env`: PS2 build env (Wine for the SN tools) |
+| Bokura no Kazoku (PS2 decomp) | fhs | [projects/bokura-no-kazoku/default.nix](projects/bokura-no-kazoku/default.nix) | `bokura-env`: PS2 env, four per-unit toolchains (EE-GCC 2.96 ±`-Wa,-g`, ee-gcc 2.9-991111/-01 with 2.96's as) |
+| Crash Bash (PS1 decomp) | fhs | [projects/crash-bash/default.nix](projects/crash-bash/default.nix) | `crash-bash-env`: PS1 env (Psy-Q GCC 2.8.1, maspsx, mipsel binutils, just, uv) |
+| Fat Princess (PSP decomp) | fhs | [projects/fat-princess/default.nix](projects/fat-princess/default.nix) | `fat-princess-env`: PSP env (pspdecrypt, pspdev binutils+VFPU, SNC/mwccpsp/psp-gcc, ghidra-psp, Wine); `just build` rebuilds the PRX byte-for-byte |
+| pktlib (Python) | container | [projects/pktlib/default.nix](projects/pktlib/default.nix) | uv + Python 3.11–3.14 + just, to offload pktlib's property-based / mutation / soak suites |
+
+    nix run .#pktlib -- -c 'just test'            # a command in its on-demand container
+    nix run .#pktlib -- --cpus 4 -- just soak 1   # with explicit caps
+
+Add one: a dir under [projects/](projects/) and a line in [default.nix](default.nix). A container
+project's `uv sync` (or any network fetch) only works where the host's egress allows it.
 
 ## Tools
 

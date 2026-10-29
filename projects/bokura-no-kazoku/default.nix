@@ -10,8 +10,6 @@
 #   bokura-env -c 'make'            # one command, from inside the decomp repo
 { pkgs, lib, tools }:
 
-{
-  env = lib.platforms.ps2.mkEnv {
-    name = "bokura";
-  };
+lib.platforms.ps2.mkEnv {
+  name = "bokura";
 }

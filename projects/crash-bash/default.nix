@@ -4,8 +4,6 @@
 #   crash-bash-env -c 'just build'
 { pkgs, lib, tools }:
 
-{
-  env = lib.platforms.ps1.mkEnv {
-    name = "crash-bash";
-  };
+lib.platforms.ps1.mkEnv {
+  name = "crash-bash";
 }

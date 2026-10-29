@@ -14,9 +14,7 @@
 #   rac2-env -c 'python3 tools/build.py all'   # build + match-check every program
 { pkgs, lib, tools }:
 
-{
-  env = lib.platforms.ps2.mkEnv {
-    name = "rac2";
-    wine = true;
-  };
+lib.platforms.ps2.mkEnv {
+  name = "rac2";
+  wine = true;
 }
