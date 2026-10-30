@@ -1,10 +1,10 @@
-# decomp-nix
+# workbench
 
-Declarative, reproducible build environments and toolchains for **matching decompilation** — the
-whole fragile stack declared once in Nix and cached, instead of per-machine setup scripts,
-containers or distroboxes.
+One declarative, reproducible **environment per project**, in Nix — decomp toolchains, Python, Rust,
+whatever a project needs — as an FHS shell or an on-demand container, declared once and cached
+instead of per-machine setup scripts, hand-built containers or distroboxes.
 
-Matching decomp needs an exact toolchain: decade-old console compilers (patched 1997 GCCs, Sony
+The demanding case is matching decomp: it needs an exact toolchain — decade-old console compilers (patched 1997 GCCs, Sony
 EE-GCC, Psy-Q), Windows-only SDK assemblers run under Wine, and Ghidra with the right processor
 module — normally a brittle per-machine install. Here it's one Nix closure: a fresh clone plus one
 command is the exact environment a project needs, byte-for-byte. Three real decompilations build
@@ -14,8 +14,8 @@ unchanged is a **provable** no-op (the refactor receipt you can't get on an ordi
 
 ## Quick start
 
-    nix develop github:conor-sometimes/decomp-nix#crash-bash   # drop into the PS1 build environment
-    nix run    github:conor-sometimes/decomp-nix#ghidra-ps2     # or just grab one tool
+    nix develop github:conor-sometimes/workbench#crash-bash   # drop into the PS1 build environment
+    nix run    github:conor-sometimes/workbench#ghidra-ps2     # or just grab one tool
 
 ## Projects
 
@@ -95,9 +95,9 @@ multilib, the tools to build old compilers, ninja, Python with decomp-permuter's
 
 ## Use (flake)
 
-    nix run github:conor-sometimes/decomp-nix#bokura-no-kazoku -- -c 'make'   # a command in an env
-    nix develop github:conor-sometimes/decomp-nix#crash-bash                  # an interactive shell in it
-    nix build github:conor-sometimes/decomp-nix#ghidra-ps2                    # any tool
+    nix run github:conor-sometimes/workbench#bokura-no-kazoku -- -c 'make'   # a command in an env
+    nix develop github:conor-sometimes/workbench#crash-bash                  # an interactive shell in it
+    nix build github:conor-sometimes/workbench#ghidra-ps2                    # any tool
 
 `flake.lock` is the one nixpkgs pin (default.nix reads it too; bump with `nix flake update`). [flake.nix](flake.nix) re-exposes default.nix and lists nothing by hand: add a package or project to default.nix and it appears in the flake.
 
@@ -105,12 +105,12 @@ multilib, the tools to build old compilers, ninja, Python with decomp-permuter's
 
 From a project clone:
 
-    nix-shell -A lombyte.env.env /path/to/decomp-nix     # or: nix-build -A lombyte.env
+    nix-shell -A projects.lombyte.shell /path/to/workbench   # or: nix-build -A projects.lombyte.run
 
 On NixOS, add the package to `environment.systemPackages`:
 
-    (import (fetchTarball "https://github.com/conor-sometimes/decomp-nix/archive/<rev>.tar.gz")
-      { inherit pkgs; }).lombyte.env
+    (import (fetchTarball "https://github.com/conor-sometimes/workbench/archive/<rev>.tar.gz")
+      { inherit pkgs; }).projects.lombyte.run
 
 ## Rules
 

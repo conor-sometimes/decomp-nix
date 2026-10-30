@@ -1,7 +1,7 @@
 # Flake wrapper over default.nix (which stays the real definition, for non-flake users).
-#   nix build github:conor-sometimes/decomp-nix#ghidra-ps2
-#   nix develop github:conor-sometimes/decomp-nix#bokura-no-kazoku     # interactive shell in a project's env
-#   nix run github:conor-sometimes/decomp-nix#bokura-no-kazoku -- -c 'make'   # one command in it
+#   nix build github:conor-sometimes/workbench#ghidra-ps2
+#   nix develop github:conor-sometimes/workbench#bokura-no-kazoku     # interactive shell in a project's env
+#   nix run github:conor-sometimes/workbench#bokura-no-kazoku -- -c 'make'   # one command in it
 # (an FHS env's devShell is interactive only and ignores --command; use nix run for commands)
 # flake.lock is the only nixpkgs pin; default.nix reads it too. Bump: nix flake update.
 {

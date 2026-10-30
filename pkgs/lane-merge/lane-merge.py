@@ -18,7 +18,7 @@ splat decomp without the usual breakage. Run from the decomp repo; subcommands:
                                      func_X in a linker log (a caller still uses the old name).
 
 Options: --symbols (config/symbol_addrs.txt), --aliases (config/aliases.ld), --src (src).
-Lessons behind it: Bokura no Kazoku's 17-lane overnight run (decomp-nix docs).
+Lessons behind it: Bokura no Kazoku's 17-lane overnight run (workbench docs).
 """
 import argparse
 import glob

@@ -2,7 +2,7 @@
 # release "compilers"), pinned to the SHA-256s bokura-no-kazoku-decomp verified. Each is a
 # folder, not a PATH entry: $DECOMP_COMPILERS/<name>/ in PS2 envs (platforms.ps2), the same
 # layout as a project's tools/compilers/<name>/. They're Linux i386 binaries and run inside a
-# decomp-nix env (which provides the 32-bit loader and libraries), so they're not patched.
+# workbench env (which provides the 32-bit loader and libraries), so they're not patched.
 { pkgs }:
 
 let
